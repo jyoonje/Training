@@ -25,18 +25,16 @@ public class Main {
 	            maxFrequency = Math.max(maxFrequency, frequency);	// 두 값 중 더 큰 값으로 maxFrequency 업데이트	
 	        }
 
-		//String mostFrequentCharacters = "";	// 가장 높은 빈도를 가지는 알파벳들을 저장하는 문자열 생성
-	        StringBuilder mostFrequentCharacters = new StringBuilder();
+	        StringBuilder mostFrequentCharacters = new StringBuilder(); // 가장 높은 빈도를 가지는 알파벳들을 저장하는 문자열 생성
 
 	        for (char c = 'a'; c <= 'z'; c++) {
 	            int index = c - 'a';
 	            if (frequencyArray[index] == maxFrequency) {
-			//mostFrequentCharacters += c;    
 	                mostFrequentCharacters.append(c);
 	            }
 	        }
 
-	        if (mostFrequentCharacters.length() == 1) {	// 결과 출력. 빈도가 가장높은 문자의 집합이기 때문에 하나를 초과하면 '?' 출력
+	        if (mostFrequentCharacters.length() == 1) {	// 결과 출력.
 	            System.out.println(Character.toUpperCase(mostFrequentCharacters.charAt(0)));
 	        } else {
 	            System.out.println("?");
