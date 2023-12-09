@@ -22,16 +22,16 @@ public class BubbleSort {
 			arr[i] = br.read();
 		}
 		
-		for(int i=0; i<arr.length-1; i++){		//i는 첫번째 인덱스가 된다.
-			for(int j=0; j<arr.length-1-i; j++) {	//가장 큰 수가 마지막으로 가기 때문에 비교하는 수가 하나씩 줄어듦
+		for(int i=0; i<arr.length-1; i++){		// 배열의 길이-1 만큼의 라운드를 가짐
+			for(int j=0; j<arr.length-1-i; j++) {	//실제 정렬이 일어나는 구간으로, 가장 큰 수가 마지막으로 가기 때문에 비교하는 수가 하나씩 줄어듦
 				if(arr[j] > arr[j+1]) {		//왼쪽 인덱스의 값이 오른쪽 인덱스의 값보다 크다면 스왑
 					int temp = arr[j];
 					arr[j] = arr[j+1];
 					arr[j+1] = temp;
 				}
 			}
-			
 		}
+		
 		for(int i=0; i<arr.length; i++) {
 			System.out.println(arr[i] + " ");
 		}
