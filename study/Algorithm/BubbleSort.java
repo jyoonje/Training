@@ -3,6 +3,7 @@ package Algorithm;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
+// 정렬 알고리즘의 하나로, 두 개의 인접한 원소를 비교하여 정렬하는 방식.
 // 데이터의 수가 N개일 때, 버블소트는 N*(N+1)/2 만큼의 시간복잡도를 가진다.
 // +,/ 와 같은 연산은 N이 매우 큰 값이라면 큰 의미가 없음. 
 // => 버블소트의 시간 복잡도:  O(N^2) 
