@@ -1,31 +1,36 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int enterNo = Integer.parseInt(br.readLine());
+		
+		HashMap<String, String> nameMap = new HashMap<String, String>();
 
-		int n = sc.nextInt();
-		HashMap<String, String> map = new HashMap<String, String>();
+		StringTokenizer st;
+		for (int i = 0; i<enterNo; i++) {
+			st = new StringTokenizer(br.readLine());
+			String name = st.nextToken();
+			String state = "";
 
-		for (int i = 0; i < n; i++) {
-			String name = sc.next();
-			String state = sc.next();
-
-			if (map.containsKey(name)) {
-				map.remove(name);
+			if (nameMap.containsKey(name)) {
+				nameMap.remove(name);
 			} else {
-				map.put(name, state);
+				nameMap.put(name, state);
 			}
 		}
 
-		ArrayList<String> list = new ArrayList<String>(map.keySet());
-		Collections.sort(list, Collections.reverseOrder());
+		ArrayList<String> nameList = new ArrayList<String>(nameMap.keySet());
+		Collections.sort(nameList, Collections.reverseOrder());
 		
-		for(var li : list) {
-			System.out.print(li + " ");
+		for(String s : nameList) {
+			System.out.println(s);
 		}
 	}
 }
