@@ -1,3 +1,5 @@
+//쓸데없이 복잡하게 짜여진 코드이다. 자료구조/알고리즘 공부를 통해 더 나은 코드를 작성하기 위하여 연습이 필요하다.
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
