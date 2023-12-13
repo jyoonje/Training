@@ -12,18 +12,14 @@ public class Main {
 		int M = 0;
 		if(st.hasMoreTokens()) {
 			N = Integer.parseInt(st.nextToken());
-		}else {
-			System.out.println("첫번째 토큰에서");
 		}
 		if(st.hasMoreTokens()) {
 			M = Integer.parseInt(st.nextToken());
-		}else {
-			System.out.println("두번째 토큰에서");
 		}
 		
 		int leftIdx=0, rightIdx=0, sum=0, count=0;
 		
-		int[] numArr = new int[N+1];
+		int[] numArr = new int[N+1];    //ArrayIndexOutOfBounds예외 예방
 		
 		for(int i=0; i<N; i++) {
 			if(!st.hasMoreTokens()) {
