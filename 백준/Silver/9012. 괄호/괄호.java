@@ -17,13 +17,12 @@ public class Main {
 		StringBuilder answerStr = new StringBuilder();
 
 		for (int i = 0; i < N; i++) {
-			String inputStr = br.readLine(); // 문자열에서 '(' 와 ')'의 개수가 같으면 YES, 아니면 NO /스택이 비어있을 때 ')'가 들어오면 NO
+			String inputStr = br.readLine();		 // 문자열에서 '(' 와 ')'의 개수가 같으면 YES, 아니면 NO /스택이 비어있을 때 ')'가 들어오면 NO
 			for (int j = 0; j < inputStr.length(); j++) {
 				char str = inputStr.charAt(j);
-				if (str == '(') {
-					inputStack.push(str);
-				}
-				else if (str == ')') {
+				
+				if (str == '(') inputStack.push(str);
+				else  {
 					if (inputStack.isEmpty()) {		// 문자열 시작이 ')' -> NO
 						inputStack.push('(');
 						break;
@@ -33,6 +32,7 @@ public class Main {
 					}
 				}
 			}
+			
 			if(inputStack.isEmpty())  answerStr.append("YES").append("\n");
 			else answerStr.append("NO").append("\n");
 			
