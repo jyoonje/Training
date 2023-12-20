@@ -1,0 +1,56 @@
+//N: 시험장 수
+//X: 각 시험장 학생 수
+//B: 총감독관이 맡을 수 있는 학생 수
+//C: 부감독관이 맡을 수 있는 학생 수
+
+package 백준.Bronze;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
+
+public class prob13458 {
+
+	public static void main(String[] args) throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
+        String strX = br.readLine();	
+        String strBC = br.readLine();
+        int main = 0;
+        int sub = 0;
+        int[] manNum = new int[N+1];	//0번 인덱스에는 필요한 총감독관 수, 그 다음인덱스부턴 부감독관 수
+        manNum[0] = N;
+        
+        StringTokenizer st = new StringTokenizer(strX);
+        int[] students = new int[N];
+
+        for(int i=0; i<students.length; i++) {
+        	if(st.hasMoreTokens()) {
+        		students[i] = Integer.parseInt(st.nextToken());
+        	}
+        }
+        st = new StringTokenizer(strBC);
+        while(st.hasMoreTokens()) {
+        	main = Integer.parseInt(st.nextToken());
+        	sub = Integer.parseInt(st.nextToken());
+        }
+        
+        for(int i=0; i<students.length; i++) {
+        	int a = students[i]-main;	//각반 학생수 - 총감독관 감시가능 학생 수 (미리 빼놓지 않으면 예외 발생 가능)
+        	if(a<=0) manNum[i+1]=0;	//manNum[0]에는 총감독관 수 들어있음
+        	else {
+        		int b = a/sub;
+        		int c = a%sub;
+        		if(c!=0) b++;
+        		manNum[i+1]=b;
+        	}
+        }
+        
+        int sum=0;
+        for(int num : manNum) {
+        	sum += num;
+        }
+        System.out.println(sum);
+	}
+
+}
