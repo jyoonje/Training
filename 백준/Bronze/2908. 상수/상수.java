@@ -1,29 +1,26 @@
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		String str = br.readLine();
-	
-		StringTokenizer st = new StringTokenizer(str);
-		String reverseNumStr1 = st.nextToken();
-		String reverseNumStr2 = st.nextToken();
+		StringTokenizer st = new StringTokenizer(br.readLine());
 		
-		String numStr1 = "";
-		String numStr2 = "";
-		for(int i=reverseNumStr1.length()-1; i>=0; i-- ) {
-			numStr1 += reverseNumStr1.charAt(i);
-			numStr2 += reverseNumStr2.charAt(i);
+		StringBuilder str1 = new StringBuilder();	//reverse() 메소드를 사용하기 위해 sb 생성
+		StringBuilder str2 = new StringBuilder();
+		
+		while(st.hasMoreTokens()) {
+			str1.append(st.nextToken());
+			str2.append(st.nextToken());
 		}
-		int num1 = Integer.parseInt(numStr1);
-		int num2 = Integer.parseInt(numStr2);
-	
-		if(num1>num2) System.out.println(num1);
-		else System.out.println(num2);
+
+		int num1 =  Integer.parseInt(str1.reverse().toString());
+		int num2 =  Integer.parseInt(str2.reverse().toString());
+		
+		System.out.println(num1 > num2 ? num1 : num2 );
+		
 	}
 
 }
