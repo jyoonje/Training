@@ -16,7 +16,7 @@ public class Main {
 				//o1의 절대값이 더 크다면 swap
 				if(Math.abs(o1) > Math.abs(o2)) {
 					return Math.abs(o1) - Math.abs(o2);
-				//두 값의 절댓값이 같다면 값을 비교해서 swap/유지
+				//두 값의 절댓값이 같다면 값을 비교해서 swap 또는 유지
 				}else if(Math.abs(o1) == Math.abs(o2)) {
 					return o1 - o2;
 				}else {	//유지
