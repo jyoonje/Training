@@ -25,7 +25,7 @@ public class Main {
 			visited = new boolean[N+1];
 			answer = 0;
 			
-			for(int j=1; j<N+1; j++) {	// 인덱스 배열 A, 입력값 배열 B, 방문 확인 배열 visited 초기화 
+			for(int j=1; j<N+1; j++) {	// 입력값 배열 A, 방문 확인 배열 visited 초기화 
 				A[j] = Integer.parseInt(st.nextToken());
 			}
 			
