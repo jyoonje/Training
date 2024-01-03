@@ -45,7 +45,7 @@ public class Main {
 		//방문한 인덱스를 만날 때 까지 재귀호출
 		int next = A[idx];
 		if(!visited[next]) {
-			DFS(A[idx]);
+			DFS(next);
 		}
 		
 		
