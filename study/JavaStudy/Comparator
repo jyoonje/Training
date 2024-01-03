@@ -1,1 +1,54 @@
-.
+package ComparableAndComparator;
+
+import java.util.Arrays;
+import java.util.Comparator;
+
+public class ComparatorExample {
+
+	public static void main(String[] args) {
+		// TODO MyType타입 랜덤 배열 생성 후 Comparator인터페이스 구현해서 정렬
+		//		OverFlow를 고려하지 않은 코드임.
+		
+		MyType[] arr = new MyType[10];
+
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = new MyType((int) (Math.random() * 100));
+		}
+
+		// 정렬 이전
+		System.out.print("정렬 전 : ");
+		for (int i = 0; i < 10; i++) {
+			System.out.print(arr[i].value + " ");
+		}
+		System.out.println();
+		
+		Arrays.sort(arr, comp);
+		
+		//정렬 이후
+		System.out.print("정렬 후 : ");
+		for (int i = 0; i < 10; i++) {
+			System.out.print(arr[i].value + " ");
+		}
+		
+	}
+
+	//정적 멤버 변수로 선언
+	static Comparator<MyType> comp = new Comparator<>() {
+		
+		@Override
+		public int compare(MyType o1, MyType o2) {
+			return o1.value - o2.value;
+		}
+	};
+	
+}
+
+
+class MyType {
+	int value;
+	
+	public MyType(int value) {
+		this.value = value;
+	}
+	
+}
