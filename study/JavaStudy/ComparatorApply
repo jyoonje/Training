@@ -1,0 +1,40 @@
+package ComparableAndComparator;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.PriorityQueue;
+
+public class ComparatorExample2 {
+
+	public static void main(String[] args) throws Exception {
+		// TODO 이전에 풀었던 백준11268(절댓값힙) 우선순위큐 Comparator구현부분을 람다식으로 수정
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		PriorityQueue<Integer> inputQueue = new PriorityQueue<>((o1, o2) -> {
+				if (Math.abs(o1) > Math.abs(o2)) {
+					return Math.abs(o1) - Math.abs(o2);
+				} else if (Math.abs(o1) == Math.abs(o2)) {
+					return o1 - o2;
+				} else { 
+					return -1;
+				}
+		});
+		
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < N; i++) {
+			int x = Integer.parseInt(br.readLine());
+			if (x == 0) {
+				if (inputQueue.isEmpty())
+					sb.append("0").append("\n");
+				else
+					sb.append(inputQueue.poll()).append("\n");
+			} else {
+				inputQueue.offer(x);
+			}
+		}
+		System.out.println(sb);
+	}
+
+}
