@@ -1,0 +1,38 @@
+package Algorithm;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class BFS {
+	public static void main(String[] args) {
+		// 그래프의 연결상태를 2차원 배열로 표현
+		int[][] graph = { {}, { 2, 3, 8 }, { 1, 6, 8 }, { 1, 5 }, { 5, 7 }, { 3, 4, 7 }, { 2 }, { 4, 5 }, { 1, 2 } };
+		boolean[] visited = new boolean[9]; // 방문처리를 위한 배열
+		
+		System.out.println(bfs(1, graph, visited));
+	}
+
+	static String bfs(int start, int[][] graph, boolean[] visited) {
+		StringBuilder sb = new StringBuilder();
+		Queue<Integer> q = new LinkedList<Integer>(); // BFS에 사용할 큐를 생성
+
+		q.offer(start); // 큐에 BFS를 시작 할 노드 번호 할당
+
+		visited[start] = true; // 시작노드 방문처리
+
+		while (!q.isEmpty()) { // 큐가 비어있지 않으면 반복
+			int nodeIndex = q.poll();
+			sb.append(nodeIndex + " -> ");
+
+			for (int i = 0; i < graph[nodeIndex].length; i++) { // 큐에서 꺼낸 노드와 연결된 노드들 체크
+				int temp = graph[nodeIndex][i];
+				if (!visited[temp]) { // 방문하지 않았으면 방문처리 후 큐에 넣기
+					visited[temp] = true;
+					q.offer(temp);
+				}
+			}
+		}
+		// 탐색순서 리턴
+		return sb.toString();
+	}
+}
