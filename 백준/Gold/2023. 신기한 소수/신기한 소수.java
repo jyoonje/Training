@@ -25,10 +25,7 @@ public class Main {
 			return;
 		}
 		
-		for(int i=1; i<10; i++) {
-			if(i % 2 == 0) {	//짝수라면 탐색x
-				continue;	
-			}
+		for(int i=1; i<10; i=i+2) {
 			if(isPrime(number*10 + i)) {
 				DFS(number*10 + i, jarisu+1);
 			}
