@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 public class Main {
+	//동전의 종류는 오름차순으로 들어오며, 값이 2배씩 커지므로 그리디 알고리즘을 이용하여 풀이한다.
 
 	static int[] A;
 	static StringTokenizer st;
