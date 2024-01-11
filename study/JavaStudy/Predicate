@@ -1,0 +1,65 @@
+// Predicate<T> : 자바8에서 추가된 기능으로, java.util.function 패키지에 속한 함수형 인터페이스이다.
+//                ( 3개의 default메소드, 2개의 static메소드, 1개의 추상메소드(test(T t)) )
+//                -> 람다식으로 표현이 가능하다.
+
+// 아래는 Predicate 인터페이스의 간단한 사용법이다. 
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+public class asd {
+    public static void main(String[] args) {
+//        String str ="abc";
+//        boolean match = str.equals("def");
+
+        Predicate<String> p = str -> str.equals("def");
+        System.out.println(p.test("abc"));      //false 출력
+    }
+
+    public void PredicateDemo() {
+        //Predicate와 Stream의 관계 : Stream의 filter()메소드의 인자로 Predicate타입이 들어온다.
+
+        List<Student> students = new ArrayList<>();
+        students.add(new Student("정윤제", 27));
+        students.add(new Student("김재섭", 21));
+        students.add(new Student("홍길동", 19));
+        students.add(new Student("김자바", 11));
+        students.add(new Student("이자바", 25));
+        students.add(new Student("정순환", 16));
+
+        //스트림을 쓰지않고 필터링
+        List<Student> filtered1 = new ArrayList<>();
+        for(Student student : students){
+            if(student.getAge() >= 20)
+                filtered1.add(student);
+        }
+
+        Predicate<Student> p = s -> s.getAge() >= 20;
+//        List<Student> filtered2 = new ArrayList<>();
+//        filtered2 = students.stream().filter(p).collect(Collectors.toList());
+
+        List<Student> filtered2 = students.stream().filter(s -> s.getAge() >= 20).collect(Collectors.toList());
+
+        System.out.println(filtered2);
+    }
+
+    class Student{
+        private String name;
+        private int age;
+
+        public Student(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getAge() {
+            return age;
+        }
+    }
+}
