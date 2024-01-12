@@ -1,0 +1,72 @@
+package javaStudy;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+public class OptionalExam {
+    public static void main(String[] args) {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String value;
+        try {
+            value = br.readLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Optional 생성
+        Optional<String> optional = Optional.empty();
+        System.out.println(optional);                   //Optional.emptu
+        System.out.println(optional.isPresent());       //false
+
+        Optional.of(value);  // value가 null일 경우 예외발생
+        Optional.ofNullable(value);     // value가 null이면 Optional.empty 리턴(예외 발생 x)
+
+
+        //Optional클래스가 제공하는 메소드
+
+        // 1. filter() : 파라미터인 Predicate이 true이면 Optional객체를 통과시키고, false이면 Optional.empty 리턴
+        String result1 = Optional.ofNullable("ABCDE")
+                .filter((e) -> e.contains("ABC"))
+                .orElse("Does not contain");
+        System.out.println(result1);    //ABCDE
+
+        String result2 = Optional.ofNullable("CDEFG")
+                .filter(e -> e.contains("ABC"))
+                .orElse("Does not contail");
+        System.out.println(result2);    //Does not contain
+
+        // 2. map() : 값을 변환시킴 ( Stream클래스의 map() 메소드와 동일하므로 생략.)
+
+        // 3. isPresent() : 값이 있다면 true, null이면 false 반환
+
+        //** 4. ifPresent() : 값이 있다면 파라미터인 람다식 적용, null이면 실행되지 않음
+        Optional.of("ABCDE").ifPresent(s -> System.out.println(s)); // "ABCDE" 출력
+        Optional.ofNullable(null).ifPresent(s -> System.out.println(s));    // 아무것도 출력되지 않음
+
+        // 5. get() : Optional 객체가 가지고있는 값 리턴. null이면 예외발생
+        // 6. orEls() : " , null이면 orElse()메소드의 지정된 값으로 리턴
+        // 7. orElseGet() : Optional 객체가 비어있다면 기본값으로 제공할 supplier 지정. 값이 null일때만 호출된다.
+        // 8. orElseThrow() : 값이 null이면 예외를 발생시킨다. ( get() 메소드와 같음 )
+
+        
+        
+        //Stream과 Optional의 관계
+        //  1. Stream에서 제공하는 메소드 중 findAny(), findFirts() 메소드는 Optional객체를 반환
+        //  2. Optional객체에서 Steam을 얻을 수 있음.
+        
+        //  -> Stream과 Optional은 서로 연관되어 있으며, 서로 보완하는 기능을 제공한다. 이들은 모두 함수형 프로그래밍의 기능이다.
+        String str = "ABCABC";
+        Optional<String> a = Stream.of(str).distinct().findAny();
+
+        a.stream().filter(c -> c.contains("AB")).forEach(System.out::println);
+
+
+
+    }
+
+
+}
