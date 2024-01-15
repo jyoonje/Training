@@ -1,0 +1,29 @@
+package FunctionalInterfaceExam;
+
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+public class FunctionDemo {
+
+    //Function<T, R> 인터페이스 : 첫 번째 매개변수는 input, 두 번째 매개변수를 리턴한다.
+
+//    @FunctionalInterface
+//    public interface Function<T, R> {
+//        R apply(T t);
+//        default메소드 2개, static메소드 1개 ..
+//    }
+
+    public static void main(String[] args) {
+        //인풋타입 String, 리턴타입 Integer
+        Function<String, Integer> f = String::length;   // str -> str.length();
+        System.out.println(f.apply("abc"));     // 3 출력
+
+
+        //BiFunction
+        BiFunction<String, String, Boolean> bif = String::equals;    // (str1, str2) -> str1.equals(str2);
+        System.out.println(bif.apply("avc", "avc"));
+
+    }
+
+
+}
