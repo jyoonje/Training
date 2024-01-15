@@ -63,3 +63,21 @@ public class PredicateExam {
         }
     }
 }
+
+//Predicate인터페이스의 and() 메소드와 or() 메소드
+
+    Predicate<String> p = str ->  str.length() > 2;
+    System.out.println(p.test("abc"));
+
+    //and() 메소드 ==> p.test() && p2.test()
+    System.out.println(p.and(str -> str.equals("asd")).test("abc"));  //false 출력    // Predicate인터페이스의 and메소드:
+                                                                                            // 인자로 Predicate인터페이스를 받으며, 두 개의 test()메소드가 모두 true이면 true 반환
+
+    //or() 메소드  ==> p.test() || p2.test()
+    System.out.println(p.or(str -> str.equals("asd")).test("abc"));
+
+
+
+
+
+
