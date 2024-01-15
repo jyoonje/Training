@@ -1,0 +1,82 @@
+package Sets;
+
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+public class Set2 {
+
+    public static void main(String[] args) {
+
+        Employee emp = new Employee("sai", "HR", 45000, "Male", LocalDate.of(2000, 5, 05));
+        Employee emp2 = new Employee("krishna", "Accounting", 45000, "Male", LocalDate.of(2002, 2, 02));
+        Employee emp3 = new Employee("Anusha", "IT", 60000, "Female", LocalDate.of(2009, 9, 23));
+        Employee emp4 = new Employee("Ashok", "IT", 50000, "Male", LocalDate.of(2003, 5, 20));
+
+        List<Employee> emps = new ArrayList<>();
+        emps.add(emp);
+        emps.add(emp2);
+        emps.add(emp3);
+        emps.add(emp4);
+
+
+        //1. How many male and female employees are there in the organization?
+        long maleNum = emps.stream().filter(e -> e.getGender().equals("Male")).count();
+        long femaleNum = emps.stream().filter(e -> e.getGender().equals("Female")).count();
+        System.out.println(maleNum);
+        System.out.println(femaleNum);
+
+        //2. print departments in this organization
+        List<String> list2 = emps.stream().map(Employee::getDepartment).distinct().toList();
+        System.out.println(list2);
+
+        //3. highest paid employee in this organization
+        // 스트림으로 변환 > 연봉으로 정렬 > 첫번째 가져오기 > 이름으로 변환
+        String name = emps.stream().max(Comparator.comparingDouble(Employee::getSalary)).map(e -> e.getName()).get();
+        System.out.println(name);
+
+        //4. All employees who have joined after 2000
+        // 스트림으로 변환 > 필터링 > 출력
+        List<String> list3 = emps.stream().filter(e -> e.getJoiningDate().getYear() > 2000).map(e -> e.getName()).toList();
+        System.out.println(list3);
+
+        //5. count the number of employees in each department
+        Map<String, Long> collect = emps.stream().collect(Collectors.groupingBy(Employee::getDepartment, Collectors.counting()));
+        System.out.println(collect);
+
+        //6. average salary of each department
+        Map<String, Double> collect2 = emps.stream().collect(Collectors.groupingBy(Employee::getDepartment, Collectors.averagingDouble(Employee::getSalary)));
+        System.out.println(collect2);
+
+        //7. most senior in the organization
+        // 스트림 생성 > min(날짜순 정렬) > getName > get
+        String seniorName = emps.stream().min(Comparator.comparing(Employee::getJoiningDate)).map(Employee::getName).orElse("null");
+        System.out.println(seniorName);
+
+        //8. how many male and female employees in department "IT"
+        // 스트림 생성 > 필터링(IT) > 그루핑(male, female) > map출력
+        Map<String, Long> collect3 = emps.stream().filter(e -> e.getDepartment().equals("IT"))
+                .collect(Collectors.groupingBy(Employee::getGender, Collectors.counting()));
+
+        System.out.println(collect3);
+
+        //9. what is average salary and total salary of whole organization?
+        DoubleSummaryStatistics summaryStatistics = emps.stream().map(Employee::getSalary).mapToDouble(e -> e).summaryStatistics();
+        System.out.println(summaryStatistics.getAverage() + " " + summaryStatistics.getSum());
+
+        //10. sort the employees n DESC order based on salaries
+        // 스트림 생성 > sorted(o2-o1) > 리스트 반환
+//      List<String> descList = emps.stream().sorted((o1, o2) -> (int)(o2.getSalary() - o1.getSalary())).map(Employee::getName).toList();   // 내 풀이
+        List<Employee> descList = emps.stream().sorted(Comparator.comparingDouble(Employee::getSalary).reversed()).toList();                // 두 번째 풀이(유데미)
+        System.out.println(descList);
+        //두 번째 풀이는 타입 안정성과 정밀도 면에서 더 나은 접근 방식을 제공하며, Employee 객체 리스트를 그대로 반환하여 객체의 다른 속성에도 접근할 수 있게 한다.
+
+        //11. fetch top 3 salaries employees detail
+        // 스트림 생성 > 월급 내림차순 정렬 > 3개 뽑음 > 리스트 반환
+        List<Employee> top3List = emps.stream().sorted(Comparator.comparingDouble(Employee::getSalary).reversed()).limit(3).toList();
+        System.out.println(top3List);
+
+    }
+
+}
