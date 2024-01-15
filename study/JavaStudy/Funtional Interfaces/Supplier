@@ -1,0 +1,20 @@
+package FunctionalInterfaceExam;
+
+import org.w3c.dom.ls.LSOutput;
+
+import java.util.function.Supplier;
+
+public class SupplierDemo {
+
+    //Suplier인터페이스
+
+    public static void main(String[] args) {
+
+        //Supplier인터페이스: 반환타입을 인자로 받으며, get()메소드는 인자를 받지 않음
+        //                  하나의 추상메소드 get() 메소드만을 갖는다
+
+        //      반환타입
+        Supplier<String> s = () -> new String("HelloWorld");
+        System.out.println(s.get());
+    }
+}
