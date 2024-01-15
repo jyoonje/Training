@@ -1,0 +1,75 @@
+package Sets;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class Set1 {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(1, 2, 3, 45, 46, 3, 44, 55, 49, 555);
+
+        //1. print sum of all numbers for using Stream
+
+        //Stream클래스 reduce() 메소드: 모든 스트림의 요소를 하나의 결과물로 반환한다.
+        // 1+2 = 3
+        // 3+3 = 6
+        // 6 + 45........
+
+        int sum = numbers.stream().reduce((a, b) -> a + b).get();
+        // int sum = numbers.stream().reduce(Integer::sum).get();
+        System.out.println(sum);
+
+        //2. print average of all numbers
+        double avg = numbers.stream().mapToDouble(n -> n).average().getAsDouble();
+        System.out.println(avg);
+
+        //3. print even and odd numbers
+        //even
+        List<Integer> list = numbers.stream().filter(n -> n % 2 == 0).toList();
+        System.out.println(list);
+        //odd
+        numbers.stream().filter(n -> n % 2 != 0).forEach(System.out::print);
+        System.out.println("");
+
+        //4. print numbers starts with 4
+        //                                    // ( n -> n.toString() )
+        List<String> list2 = numbers.stream().map(Object::toString).filter(str -> str.startsWith("4")).collect(Collectors.toList());
+        System.out.println(list2);
+
+        //toList() 메소드와 collect(Collectors.toList()) 메소드의 차이점
+        //      : toList() 메소드는 코드를 좀 더 간결하게 만들고, 변경 불가능한 리스트를 반환함으로써 실수로 리스트를 변경하는 것을 방지하는 장점이 있다.
+        //      반면에 collect(Collectors.toList())는 변경 가능한 리스트를 반환할 수 있디.
+
+        //5. ignore first 5 numbers
+        List<Integer> list3 = numbers.stream().skip(5).toList();
+        System.out.println(list3);
+
+        //6. print statistics( min, max, sum, average all together )
+        DoubleSummaryStatistics summaryStatistics = numbers.stream().mapToDouble(n -> n).summaryStatistics();
+        System.out.println(summaryStatistics);
+
+        //7. print min and max
+        int max = numbers.stream().max(Comparator.naturalOrder()).get();
+        System.out.println(max);
+
+        int min = numbers.stream().max(Comparator.reverseOrder()).get();
+        //int min = numbers.stream().min(Comparable::compareTo).get();
+        System.out.println(min);
+
+        //8. print numbers in ASC and DESC
+        List<Integer> list4 = numbers.stream().sorted().toList();
+        System.out.println(list4);
+
+        List<Integer> list5 = numbers.stream().sorted(Comparator.reverseOrder()).toList();
+        System.out.println(list5);
+
+        //get second highest and secind lowest number
+//        int secondHigh = numbers.stream().sorted(Comparator.reverseOrder()).toList().get(1);    // 내 풀이
+        int secondHigh = numbers.stream().sorted(Comparator.reverseOrder()).skip(1).findFirst().get();
+        System.out.println(secondHigh);
+
+//        int secondLow = numbers.stream().sorted().toList().get(1);
+       int secondLow = numbers.stream().sorted().skip(1).findFirst().orElse(1);
+        System.out.println(secondLow);
+    }
+}
