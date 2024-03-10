@@ -278,6 +278,7 @@ TCP 세그먼트의 간단한 형식: 소스 포트 | 목적지 포트 | 시퀀�
 4. IP 패킷의 '데이터' 영역의 TCP 세그먼트에는 소스 포트, 목적지 포트가 있다.
 5. 컴퓨터 A는 Sequence Number:0 형식으로(시퀀스 넘버 뒤의 숫자는 랜덤) TCP 메세지(Synchronize flag)를 보낸다.
 6. 컴퓨터 B는 Acknowledge Number:1 , Sequence Number:0 등의 형식으로 확인 메세지(Synchronize flag)를 보낸다.
+( 여기서 Ack 예시: 수신한 컴퓨터가 데이터 1, 2번을 받았다면 Acknowledgement:3을 보낸다! 이 뜻은 1,2 번을 받았으니 3번을 달라는 뜻이다.)
 7. 컴퓨터 A는 다시  Acknowledge Number:1 , Sequence Number:1 의 형식으로 컴퓨터 B에 전송하고, 
 이 과정을 Three way Handshake 라 한다.
 8. TCP 연결 성공이 되었고, 현재까지는 아무 데이터도 존재하지 않는다.
