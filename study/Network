@@ -227,7 +227,7 @@ Step 4) DHCP Acknowledgement :
 DHCP 서버는 메세지를 확인하고, IP주소를 사용하기 위한 부가적인 정보를 브로드캐스팅한다.
 (IP주소, 서브넷 마스크, Default Gateway, Lease Time ... )
 
-* DHCP 메세지 구조: 이더넷 프레임 내부에 IP 패킷 내부에 UDP Segment 내부에 DBCP 메세지 가 있다.
+* DHCP 메세지 구조: 이더넷 프레임 내부에 IP 패킷 내부에 UDP Segment 내부에 DHCP 메세지 가 있다.
 
 
 ° Transport Layer Protocols (전송 계층 프로토콜)
