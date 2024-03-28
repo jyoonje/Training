@@ -60,5 +60,6 @@ Hibernate는 낮은 결합도의 이점을 살린 ORM프레임워크로서 API �
 
 
 
+참고 자료: tistory, "[JPA] JPA와 Hibernate 그리고 Spring Data JPA, https://dev-coco.tistory.com/74, 20240328
 
 
