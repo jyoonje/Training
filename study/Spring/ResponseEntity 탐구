@@ -1,0 +1,95 @@
+1. ResponseEntity를 사용해야 하는 이유
+우리가 RESTful API를 만드는 이유는 무엇일까? RESTful API를 만드는 가장 큰 이유는 클라이언트 사이드를 정형화된 플랫폼이 아닌 모바일, PC, 어플리케이션 등 플랫폼에 제약을 두지 않는 것을 목표로 했기 때문이다.
+조금 더 쉽게 설명하자면, 2010년 이전에는 서버 사이드에서 데이터를 전달해주는 클라이언트 프로그램은 PC브라우저 뿐이었다. 
+하지만 TV, 스마트폰, 테블릿 등 스마트 기기들이 다양해지면서 클라이언트 프로그램이 다양화되고 그에 맞춰서 서버 사이드를 일일이 만드는 것이 비효율적인 일이 되었다.
+
+이런 과정에서 개발자들은 클라이언트 사이드를 전혀 고려하지 않고 메시지 기반, XML, JSON과 같은 클라이언트에서 바로 객체로 치환 가능한 형태의 데이터 통신을 지향하게 되었다.
+이런 변화를 겪으면서 필요해진 것은 HTTP 표준 규약을 지킨 API를 만드는 것이다.
+
+이 RESTful API를 개발하다보면 HTTP의 Resoponse 규약을 지키지 않고 본인들이 만들어낸 JSON규약으로 응답하는 경우를 많이 볼 수 있다.
+하지만 표준을 지키지 않으면, 클라이언트 사이드가 정형화되어있지 않은 환경에서 개발속도가 저하된다.
+표준을 지키지 않았을 때 발생하는 가장 큰 이슈는 HTTP Status 코드를 제대로 응답하지 않게 되는 것이고,
+이런 경우 클라이언트에서는 별도의 방어코드를 넣는 수고가 발생하며, 이런 수고들이 모여 프로젝트의 속도를 저하시키는 요소가 된다.
+
+위와 같은 이유로 Controller에서 결과를 반환할 때, ResponseEntity 객체를 이용해 규약에 맞는 Http Resoponse를 반환해야한다.
+
+2. HTTP
+HTTP는 Hyper Text Transfer Protocol의 약자로, 클라이언트와 서버 간의 요청과 응답을 처리하기 위한 규약이다.
+해당 규약을 지킨다면 살펴보는 것만으로도 어떤 요청을 하는지에 대해 간략하게 알 수 있다. 
+HTTP의 Request와 Reponse는 크게 세 가지 요소로 구성된다.
+
+- HTTP Request
+HTTP요청은 Start Line, Headers 그리고 Body 세 가지 요소로 구성된다.
+1) Start Line: method, URL, 그리고 version으로 이루어져있으며, 서버에서 요청을 받아들이는 첫 줄이다.
+2) Headers: 요청에 대한 접속 운영체제, 브라우저, 인증 정보와 같은 부가적인 정보를 담고있다.
+3) Body: 요청에 관련된 JSON, HTML과 같은 구체적인 내용을 포함한다.
+
+- HTTP Response
+HTTP응답은 다른 요소인 Status Line과 Headers, Body로 구성된다.
+Status Line: HTTP 버전과 함께 해당 요청에 대한 처리의 상태를 나타낸다.
+200, 404와 같은 숫자 코드로 동시에 나타낸다.
+
+Spring에서는 HTTP Response를 만드는 것이 주요한 관심사이다. 200, 404 등 각각의 응답의 상태 코드 뿐만아니라, Body에 들어갈 내용도 넣어주어야 한다.
+이 세 가지 요소를 받아서 자동으로 구성해주는 @ResponseBody 어노테이션과 ResponseEntity 객체가 있다.
+
+
+3. Controller vs RestController
+ResponseEntity를 알아보기 전에 먼저 Controller와 RestController의 큰 차이점을 알아보겠다.
+Spring MVC Controller와 Restful Web Service Controller의 가장 큰 차이점은 HTTP Response BOdy가 생성되는 방식이다.
+
+- Contoller(Spring MVC Controller)
+기존의 Spring MVC는 view를 사용하기 때문에 주로 view(화면)를 return한다.
+이 때, 데이터는 ModelAndView 객체를 이용해 Controller에서 Client로 전달되는 것을 알 수 있다.
+단, @ResponseBody 어노테이션을 사용하면 view를 return하지 않고 Controller에서 직접 데이터를 return할 수 있다.
+@ResponseBody를 사용하면 Spring은 HTTP 응답에 리턴 값을 자동으로 변환해준다. 대신 Controller 클래스의 각 메소드에 @ResponseBody 어노테이션을 작성해야 한다.
+
+- RestController(Restful Web Service Controller)
+Spring4.0이상에서는 @RestController 어노테이션을 선언해주면서 컨트롤러 클래스의 각 메소드마다 @ResponseBody를 추가할 필요가 없어졌고,
+모든 메소드는 @ResponseBody 어노테이션이 기본으로 적용된다.
+
+- @ResponseBody
+@ResponseBody는 HTTP 규격에 맞는 응답을 만들어주기위한 어노테이션이다.
+HTTP요청을 객체로 변환하거나, 객체를 응답으로 변환하는 HttpMessageConverter를 사용한다.
+따라서 컨트롤러에서 반환할 객체나 Method에 @ResponseBody 를 붙이는 것 만으로도 HTTP 규격에 맞는 값을 반환할 수 있다.
+
+HttpMessageConverter: HttpMessageConverter는 해당 어노테이션이 붙은 대상을 Jackson라이브러리를 통해 JSON으로 응답 Body에 직렬화를 하는 방식으로 작동된다.
+다른 Converter를 등록하지 않았다면 기본적으로 HtteMessageConverter의 구현체인 MappingJackson2HttpMessageConverter를 사용한다.
+
+하지만 단점으로는 HTTP 규격 요소 중 하나인 Header에 대한 유연한 설정이 불가능하다. 또한 Status도 메소드 밖에서 @ResponseStatus 어노테이션을 사용해야한다.
+즉, HTTP 규격에 맞게 사용하기 위해서는 @ResponseBody와 @ResponseStatus를 조합해서 사용해야 한다는 것이다.
+이는 @ResponseBody만 사용 시에는 별도의 뷰를 제공하지 않고 데이터만 전송하는 형식이기 때문이다.
+이와 같은 문제점을 해결해줄 수 있는 것이 ResponseEntity 객체이다.
+
+
+4. ResoponseEntity
+ReponseEntity도 마찬가지로 HTTP응답을 빠르게 만들어주기 위한 객체이다.
+@ResponseBody와 달리 어노테이션이 아닌 객체로 사용된다. 즉, 응답으로 변환될 정보를 모두 담은 요소를 객체로 만들어서 반환해준다.
+객체의 구성 요소에서 응답이 되는 본문을 HttpMessageConverter가 변환해준 뒤, 나머지 구성 요소를 넘겨주게 된다.
+이를 통해 앞서 언급한 Header와 Status에 관련된 문제들을 해결할 수 있다.
+
+ResponseEntity의 구조를 보게 되면, status라는 변수를 필드로 가지고있다. ResponseEntity에서 직접적으로 Status Code를 지정할 수 있다는 것을 의미한다.
+ResponseEntuty는 HttpEntity를 상속하여 구현되는데, HttpEntity에서는 제네릭 타입으로 Body가 될 필드값을 가질 수 있다.
+Wrapping이 된 객체들은 자동으로 HTTP규격에서 Body에 들어갈 수 있도록 변환된다.
+
+또한, 필드 타입으로 HttpHeaders를 가지고 있는데, 이는 RepsonseBody와 다르게 객체 안에서 Header를 설정해줄 수 있음을 의미한다.
+생성자를 활용하여 ResponseEntity를 사용할 수 있다. (예시: return new ResponseEntity<UserDTO>(userDto, headers, HttpStatus.valueOf(200)); )
+
+Spring에서 위와 같이 HTTP응답으로 반환할 ResponseEntity 객체를 만들게 되었다. 이 때, 타입은 ResponseEntity<반환할 타입> 으로 지정한다.
+생성자를 사용 시에는 Body, Header, 상태 순서로 입력하면 된다.
+
+
+5. Builder 사용 권장
+ResponseEntity를 사용할 때, 생성자를 사용하기보다 Builder를 사용하는 것을 권장하고 있다.
+그 이유는 숫자로 된 상태 코드를 넣을 때, 잘못된 숫자를 넣는 실수가 발생할 수 있기 때문이다. 
+따라서 Builder Pattern을 사용하여 위의 예시를 바꾼다면
+return ResponseEntity.ok()
+        .headers(headers)
+        .body(userDto);    
+와 같이 코드를 변경할 수 있다.
+다만, Status와 관련된 메소드, headers 메소드는 BodyBuilder를 리턴하기 때문에 ResponseEntity를 리턴하는 body() 메소드를 꼭 마지막으로 호출해야 한다.
+
+
+
+
+출처: https://dev-splin.github.io/spring/Spring-ResponseEntity/
+
