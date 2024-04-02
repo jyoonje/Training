@@ -1,0 +1,39 @@
+[Spring Security 적용 후 예외 발생 시 403 Forbidden이 발생하는 원인과 해결 방법]
+
+
+기본적으로 스프링에서는 따로 예외 처리를 하지 않았다면 예외 발생 시 500에러가 발생한다. 그런데 스프링 시큐리티를 적용하면 모든 예외 발생 시 403에러가 발생한다. 심지어 존재하지 않는 URL로 접속하여 404 Not Found가 발생해야 하는 상황에서 까지도.
+
+
+1. 403 Forbidden이 발생하는 원인
+
+해당 현상이 발생했을 때 나타나는 White Error Page를 보면, 스프링 부트에서는 에러 발생 시 /error 라는 URI로 매핑을 시도한다.
+
+간단하게 알아보고 가자면,
+내가 작성한 코드의 Security Config 설정 파일을 보면, filterChain()메소드에 
+인증 없이 접근 가능한 URI 목록(ALLOWED_URIS 필드)에는 /error 이 지정되어 있지 않았다. 그런데 스프링부트는 예외 발생 시 /error 경로로 이동시키는 것이다. 따라서 /error URI로의 접근 권한이 없는 것.
+
+
+2. 403 에러가 발생하는 과정
+
+스프링 시큐리티에서의 예외 처리 과정을 알아보겠다.
+
+1) 예외가 발생하면 ExceptionTranslationFilter가 요청을 가로챈다.
+2) 사용자 인증되지 않았거나 AuthenticationException이 발생했다면 사용자 인증을 시작한다. 이 과정에서 SecurityContextHolder가 비워지고 AuthenticationEntryPoint는 사용자에게 자격 증명을 요청하기 위한 절차를 수행한다.
+3) 그 외에는 AccessDeniedHandler가 AccessDeniedException을 발생시킨다.
+
+AuthenticationEntryPoint에 자격 증명 요청을 위임하는 과정에서, 스프링 시큐리티는 별도로 설정하지 않으면 이 과정에서 Http403ForbiddenEntryPoint를 사용한다. 정의된 Http403ForbiddenEntryPoint 클래스의 commence()메소드를 살펴보면 아무 과정 없이 403에러를 반환한다.
+그리고 그 외의 경우에는 어쨌든 AccessDeniedException을 발생시켜서 403 에러가 발생한다.
+
+
+3. 해결 방법
+
+1. permitAll() URI목록에 /error 경로 추가: 간단하게 Security Config파일의 ALLOWED_URIS 필드에 "/error"을 추가한다.
+정말 간단한 해결책이지만 적절한 응답 메세지를 전달할 수 없기 때문에 좋은 해결책이 아니다.
+
+2. 적절한 예외 처리: 컨트롤러나 서비스 등의 메소드에서 발생하는 예외는 적절한 예외 처리를 통해 403에러가 반환된느 것을 막을 수 있다. @ControllerAdvice나 @RestControllerAdvice 를 통해 예외가 발생했을 때의 응답을 지정할 수 있다.
+이 방법은 컨트롤러 계층에서 발생하는 모든 예외에 대해 적절한 응답을 할 수는 있지만 404 에러처럼 컨트롤러를 거치지 않고 발생하는 에러 코드에는 대응할 수 없기 때문에 아래의 방법과 병행하는 것이 좋다.
+
+3. AuthenticationEntryPoint 구현체 등록: 403에러의 발생 원인이 AuthenticationEntryPoint인 Http403ForbiddenEntryPoint때문이다. 따라서 별도의 엔트리포인트를 작성하여 스프링 시큐리티에 등록한다면 원하는 결과를 얻을 수 있다. ( 해당 과정에서 엔트리포인트 구현체에 일일이 작성하지 않고 HandlerExceptionResolver에 예외를 넘기고 @ControllerAdvice나 @RestControllerAdvice에서 예외에 따라 적절한 응답을 반환하게 하는 방법이 바람직하다.)
+
+
+결론: AuthenticationEntryPoint구현체를 등록한 뒤 HandlerExceptionResolver에 예외를 넘겨서 ExceptionHandler를 만들어서 해결하는 것이 바람직하다.
