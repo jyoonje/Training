@@ -1,0 +1,62 @@
+
+
+1. 스프링 시큐리티란? 
+: 스프링 기반의 애플리케이션의 보안(인증, 인가 등)을 담당하는 스프링 하위 프레임워크이다.
+
+[ 보안 용어 정리 ] 
+- 인증:(Authenticate): 사용자가 누구인지 확인하는 절차
+- 인가(Authorization): 인증된 사용자가 요청하는 리소스에 대한 권한을 확인하는 절차
+- 접근 주체(Principal): 보호된 대상에 접근하는 사용자
+- 비밀번호(Credential): 대상에 접근하는 사용자의 비밀번호
+
+
+2. 스프링 시큐리티의 특징과 구조
+- 보안과 관련하여 체계적으로 많은 옵션을 제공하여 편리하게 사용할 수 있음
+- Filter 기반으로 동작하여 MVC와 분리하여 관리 및 동작
+- 어노테이션을 통한 간단한 설정
+- 기본적으로 세션&쿠키 방식으로 인증
+- 인증관리자(Authentication Manager)와 접근 결정 관리자(Access Decision Manager)를 통해 사용자의 리소스 접근을 관리
+- 인증관리자는 UserNamePasswordAuthenticationFilter, 접근 관리자는 FilterSecurityInterceptor가 수행
+
+
+3. 동작 원리
+1) 사용자가 로그인 정보를 입력하고 Http 요청을 보낸다.
+
+2) AuthenticationFilter(사용할 구현체UsernamePasswordAuthenticationFilter)가 HttpServletRequest에서 사용자가 보낸 아이디와 패스워드를 인터셉트하고, HttpServletRequest에서 꺼내온 사용자 아이디와 패스워드를 진짜 인증을 담당할 AuthenticationManager 인터페이스(구현체 - ProviderManager)에게 인증용 객체(UsernamePasswordAuthenticationToken)로 만들어줘서 위임한다.
+
+3) AutehnticationFilter에게 인증용 객체(UsernamePasswordAuthenticationFilter)를 전달받는다.
+
+4) 실제 인증을 진행할 AutehnticationProvider 에게Authentication 객체를 다시 전달한다.
+
+5) DB에서 사용자 인증 정보를 가져올 UserDetailService 객체에게 사용자 아이디를 넘겨주고 DB에서 인증에 사용할 사용자 정보(아이디, 암호화된 패스워드, 권한 등)를 UserDetails라는 객체로 돌려받는다.
+
+6) AuthenticationProvider는 UserDetails 객체를 전달받은 후, 실제 사용자의 입력 정보와 UserDetails 객체로 DB 인증을 시도한다.
+
+7) 인증이 완료되면 사용자 정보를 가진 Authentication 객체를 SecurityContextHolder(인메모리 저장소)에 담은 이후 AuthenticationSuccessHandle을 실행한다.
+
+
+
+4. 스프링 시큐리티의 아키텍쳐
+
+1) Filter 
+: 사용자로부터 Http요청이 들어오면, DispatcherServlet 이전에 가로채서 FilterChain을 생성한다. 필터에서 요청을 걸러냈을 경우, 필터 내부에서 HttpServletRequest를 생성해서 서블릿 대신 응답을 보낼 수 있다.
+
+2) DelegatingFilterProxy
+: 사용자의 요청이 서블릿에 전달되어 자원에 접근하기 전에 스프링 시큐리티는 필터의 생명주기를 이용해서 인증과 인가 작업을 수행한다. 
+서블릿 필터의 생명주기 시점에서 서블릿 컨테이너는 스프링 컨테이너에 등록된 빈을 인식할 수 없다.
+따라서 스프링 시큐리티에서는 DelegatingFilterProxy라는 서블릿 필터의 구현체를 제공한다.
+DelegatingFilterProxy는 서블릿 메커니즘을 통해 서블릿의 필터로 등록될 수 있으며 스프링에 등록된 빈을 가져와 의존성을 주입할 수 있다.
+이렇게 DelegatingFilterProxy는 서블릿 컨테이너의 생명주기와 스프링의 ApplicationContext 사이를 연결하는 다리 역할을 한다.
+
+3) FilterChainProxy
+: DelegatingFilterProxy를 통해 받은 요청과 응답을 스프링 시큐리티 필터 체인에 전달하고 작업을 위임하는 역할을 한다.
+중간에 FilterChainProxy를 두는 이유는 서블릿을 지원하는 시작점 역할을 하기 위해서이다.
+
+4) SecurityFilterChain
+: 인증을 처리하는 여러개의 시큐리티 필터를 담는 필터 체인이다. 
+또, 어떤 시큐리티 필터를 통해 인증을 수행할지 결정하는 역할을 한다.
+
+5) Security Filters
+: 요청이 들어오면 스프링 시큐리티 매커니즘에 따라 처리하는 필터로, 시큐리티의 핵심 기능을 수행하는 지점이다.
+SecurityFilterChain API를 통해 FilterChainProxy에 삽입되고 스프링 빈으로 등록된다.
+
