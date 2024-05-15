@@ -20,3 +20,10 @@ AOP(Aspect-Oriented-Programming)
 - Advice: 어떤 부가 기능을 넣을 것인가
 - Join Point: 어디에 적용할 것인가(거의 메소드이고, 필드, 객체, 생성자 등)
 - Point cut: 실제 advice가 적용될 지점. Spring AOP에서는 advice가 적용될 메소드를 선정
+
+
+
+
+
+
+
