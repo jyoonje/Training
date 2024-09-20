@@ -3,7 +3,8 @@
 
 1. 직렬화(Serialization), 역직렬화(De-Serializaion)란
 
-: Serial은 '연속된' 이라는 뜻을 가지고 있다. 즉, Serialization은 객체를 '연속된' Byte나 String으로 변환하는 과정을 의미한다. Object는 메모리에 올라와 있지만 Byte나 String은 파일로 저장될 수 있거나 통신에 사용될 수 있다.
+: Serial은 '연속된' 이라는 뜻을 가지고 있다. 즉, Serialization은 객체를 '연속된' Byte나 String으로 변환하는 과정을 의미한다. 
+Object는 메모리에 올라와 있지만 Byte나 String은 파일로 저장될 수 있거나 통신에 사용될 수 있다.
 
 즉, 직렬화는 객체를 파일의 형태 등으로 저장하거나, 통신하기 쉬운 포맷으로 변환하는 과정을 의미한다.
 
