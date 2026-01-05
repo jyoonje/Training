@@ -1,0 +1,44 @@
+package main.sort;
+
+public class BubbleSort {
+
+  // 버블정렬이란, 하나의 정렬되지 않은 배열이 주어졌을 때,
+  // 첫 인덱스부터 마지막 인덱까지 바로 오른쪽(또는 왼쪽)의 인덱스에 있는 값과 비교하여 더 큰 값을 오른쪽으로 이동시키면서 가장 큰 값을 마지막 인덱스에 저장하는 과정을 반복하여 정렬시키는 알고리즘이다.
+
+  public static void main(String[] args) {
+    int[] arr = { 5, 4, 3, 2, 1 };
+
+    printArray(arr);
+    bubbleSort(arr);
+    printArray(arr);
+  }
+
+  private static void bubbleSort(int[] arr) {
+    bubbleSort(arr, arr.length-1);
+  }
+
+  private static void bubbleSort(int[] arr, int last) { // 변수 last는 마지막 인덱스
+    if (last > 0){
+      for(int i=1; i<=last; i++){
+        if(arr[i-1] > arr[i]){
+          swap(arr, i-1, i);
+        }
+      }
+      bubbleSort(arr, last-1);
+    }
+  }
+
+  private static void swap(int[] arr, int source, int target) {
+    int tmp = arr[source];
+    arr[source] = arr[target];
+    arr[target] = tmp;
+  }
+
+  private static void printArray(int[] arr) {
+    for (int data : arr){
+      System.out.print(data + ", ");
+    }
+    System.out.println();
+  }
+
+}
