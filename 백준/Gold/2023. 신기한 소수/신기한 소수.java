@@ -1,52 +1,49 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
-	//일의자리 수 중 2, 3, 5, 7이 소수이므로, 시간복잡도를 줄이기 위해 불필요한 1, 4, 6, 8, 9는 함수 호출하지 않음
-	
-	static int N;
+  static int N;
+  static int[] B = {1, 3, 5, 7, 9};
 
-	public static void main(String[] args) throws Exception{
-		
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		N = Integer.parseInt(br.readLine());
-		
-		DFS(2, 1);
-		DFS(3, 1);
-		DFS(5, 1);
-		DFS(7, 1);
-	}
-	
-	static void DFS(int number, int jarisu) {
-		if(jarisu == N) {
-			if(isPrime(number)) {
-				System.out.println(number);
-			}
-			return;
-		}
-		
-		for(int i=1; i<10; i=i+2) {
-			if(isPrime(number*10 + i)) {
-				DFS(number*10 + i, jarisu+1);
-			}
-		}
-	}
-	
-	static boolean isPrime(int num) {	//  소수 구하는 메소드
-		for(int i=2; i<=num/2; i++) { 	//	num/2 이상부터는 확인할 필요 없음
-			if(num % i == 0) {
-				return false;	
-			}
-		}
-		return true;
-	}
+  public static void main(String[] args) throws IOException {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    N = Integer.parseInt(br.readLine());
+    int[] A = {2, 3, 5, 7};
 
+    for(int i : A) {
+      dfs(i);
+    }
+  }
+
+  public static void dfs(int num){
+    int length = String.valueOf(num).length();
+    if(length == N){
+      System.out.println(num);
+      return;
+    }
+
+    // 뒷자릿수 더해서 추가된 자릿수의 수 생성
+    // isPrime() 함수로 소수 판별 -> 맞다면 N 자릿수까지 진행
+    // 마지막 N 자릿수 까지 왔을때, 소수라면 sout
+    for(int i : B) {
+      int newNum = 10 * num + i;
+      if(isPrime(newNum)) dfs(newNum);
+      else continue;
+    }
+
+  }
+
+  public static boolean isPrime(int n) {
+    if (n <= 1) return false;       // 1 이하의 수는 소수가 아님
+    if (n == 2) return true;        // 2는 소수
+    if (n % 2 == 0) return false;   // 2의 배수는 소수가 아님
+
+    // √n 까지만 검사하면 충분
+    for (int i = 3; i <= Math.sqrt(n); i += 2) {
+      if (n % i == 0) return false;
+    }
+    return true;
+
+  }
 }
-
-
-
-
-
-
-
-
