@@ -1,4 +1,4 @@
-<img width="1060" height="418" alt="image" src="https://github.com/user-attachments/assets/606a3983-9941-405f-a963-a7077c3c0138" />## 운영체제의 구조
+## 운영체제의 구조
 
 ## 커널
 - OS의 핵심 부분 (메모리에 상주)
@@ -19,6 +19,9 @@
  
 ## 운영체제의 구조
 - 단일 구조
+  
+<img width="1060" height="418" alt="image" src="https://github.com/user-attachments/assets/606a3983-9941-405f-a963-a7077c3c0138" />
+
   - 장점
     - 커널 내 모듈간 직접 통신: 효율적 자원 관리 및 사용
   - 단점
