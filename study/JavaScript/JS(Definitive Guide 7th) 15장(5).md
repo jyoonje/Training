@@ -16,3 +16,71 @@ addEventListener() 함수이든 프로퍼티로 등록된 핸들러이든 마찬
 대부분의 이벤트는 대상 요소에서 이벤트 핸들러를  호출한 뒤에도 DOM 트리를  따라 버블링하며 올라간다.
 대상의 부모에서  이벤트 핸들러가 호출되고 대상의 조부모에 등록된 핸들러가 호출된다. 이런식으로 Document 객체를 진다 Window 객체까지 거슬러 올라간다.
 
+### 15.3 문서 스크립트
+Document 객체는 문서 콘텐츠를 표현하고 조작하는 DOM의 중심이다.
+
+css 선택자는 태그 이름, id, class에 포함된 단어를 기준으로 요소를 선택할 수 있다.
+```
+div  // <div>요소
+#nav   // id가 nav인 요소
+.warning   // 클래스 속성에 warning이 있는 요소
+```
+
+```
+p[lang="fr"]   // 프랑스어로 작성된 문단: <p lang="fr">
+```
+
+querySelecor() 함수는 인자로 css 선택자 문자열을 받고 그에 일치하는 첫 번째 요소를 반환하며, 일치하는 것이 없으면 null을 반환한다.
+```
+let spinner = document.querySelector("#spinner");  // id가 spinner인 요소를 찾음
+```
+
+querySelectoroAll()은 일치하는 요소를 전부 반환한다.
+```
+let titles = document.querySelector("h1, h2, h3");    // h1, h2, h3 태그가  붙은 Element 객체를 모두 찾음
+```
+querySelectoroAll() 메서드의 반환 값은 Element 객체 ㅂ ㅐ열이 아니라 배열 비슷한  객체인 노드리스트 이다.
+length 프로퍼티가 있고 배열처럼 인덱스 할 수 있으며 for 루프로 순회할 수 있다. 노드리스트를 배열로 변환하려면  Array.from()에 전달하면 된다.
+
+** 배열은 자료구조이며, 노드리스트는 DOM API가 반환하는 DOM 노드들을 표현하는 객체이다. 즉 출신이 다르다고 보면 된다.**
+querySelector(), querySelectorAU()은 Document 클래스뿐만 아니라 EIement
+클래스에서도 지원한다. 이들 메서드를요소에서 호출하면 해당 요소의 자손 중에서 일치하는 요소만 반환한다.
+
+css에는 자바스크립트 Element 뿐만 아니라 ::first-line과 같은 가상 요소가 있다. 이들은 실제 요소가 아니라 Text 노드에 일치한다. 
+
+
+
+15.3.2 문서 구조와 순회 부터 계속
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
