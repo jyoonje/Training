@@ -86,7 +86,192 @@ HTML 다운로드 -> HTML 파싱 -> <script> 발견 -> JS 실행 -> DOM 생성 -
 offset: "기준점에서 얼마나 떨어져 있는가"를 나타내는 
 
 15장은 API 설명이 너무 많아서 중단, ㅊ처음부터 읽는 중.
-"3.2.3 자바스크립트의 산술 연산" 부터 읽기
+
+### 13장 비동기 자바스크립트
+
+콜백 함수: 특정 함수에 매개변수로 전달되는 함수로, 호출 함수 내에서 실행되는 매개변수 함수이다. 주로 비동기 함수에 인자로 전달되며, 비동기 응답이 도착했을 시 해당 응답을 기반으로 실행되는 경우가 많다.
+
+프라미스: 비동기 프로그래밍을 단순홯라도ㅓ록 설계된 코어 기능으로, 비동기 작업의 결과를 나타내는 객체이다. 프라미스의 ㄱ ㅏㅄ을 동기적으로 가져올 수는 없으며, 값이 준비됐을 때 콜백 함ㅁ수를 호출하도록 프라미스에 요청할 수 있다..
+
+**13.2.1 프라미스 사용**
+자바스크립트 코어에 프라미스가 포함되면서 웹 브라우저에서 프라미스 기반 API를 지원하기 시작했다.
+
+예시를 들면 다음과 같다.
+- 기본 콜백 함수 방식
+```
+getCurrentVersionNumber((err, version) => {
+    if (err) {
+        console.error(err);
+        return;
+    }
+
+    console.log(version);
+});
+
+console.log("다음 코드");
+```
+HTTP 요청이 끝나기 전에 getCurrentVersionNumber()가 종료된다.
+따라서, 다음과 같이
+const version = getCurrentVersionNumber();
+console.log(version); // 실제 버전이 아님
+
+함수를 호출한 외부에서 호출 값을 다룰 수 없다. 비동기 작업의 결과가 나중에 나오기 때문이다.
+
+Promise는 이 문제를 해결하기 위해 나온 객체이다.
+| Promise: "지금은 결과가 없지만, 나중에 비동기 작업의 결과를 제공하겠다"는 약속을 나타내는 객체
+
+Promise는 결과 그 자체가 아니다.
+코드 `const result = fetch("/api/user");`에서, result는 사용자 데이터가 아니다.
+result -> Promise 객체 ->  나중에 HTTP 요청 결과를 준다는 약속
+
+실제 데이터는 나중에 도착한다.
+fetch() -> Promise 반환 -> 다음 코드 실행 -> ... -> HTTP 응답 도착 -> Promise 완료 -> 실제 데이터 사용
+
+Promise는 크게 3가지 상태를 가진다: Pending, 성공(Fulfilled), 실패(Rejected)
+
+- Pending: 아직 작업이 끝나지 않은 상태 ex) 아직 HTTP 응답 안옴
+- Fulfilled: 비동기 작업이 성공적으로 완료된 상태 ex) HTTP 응답 받아서 데이터 있음ㅁ
+- Rejected: 비동기 작업이 실패한 상태 ex) HTTP 요청 실
+
+.then() 으로 결과를 받을 수 있다.
+```
+fetch("/api/user")
+    .then(response => {
+        return response.json();
+    })
+    .then(user => {
+        console.log(user);
+    });
+```
+위의 코드에서 fetch("api/user"); 가 Promise를 반환한다. Promise가 성공적으로 완료되면 .then() 구문에 정의된 함수가 실행된다. 즉, 콜백과 연관되어있다.
+.then() 구문 뒤에서 .catch() 구문을 작성하며, Promise가 실패 시 실행되는 구문이다.
+
+다음과 같은 코드가 있다. getCurrentVersionNumber() 함수는 Promise를 반환하는 비동기 함수이다.
+```
+const version = getCurrentVersionNumber();
+console.log(version); // 실제 버전이 아님
+```
+변수 version은 Promise 객체이고, `console.log(version);`을 실행하는 시점에는 Promise의 상태가 무엇이든 간에 "Promise 객체 자체"가 출력된다.
+실제 결과 값을 얻고 싶다면 다음과 같이 사용하면 된다.
+```
+const version = await getCurrentVersionNumber();
+console.log(version);
+```
+
+콜백 함수가 아닌 PRomise를 사용하는 주요 이유는, 콜백 함수는 함수 외부에서 응답 값과 같은 변수를 사용할 수 없ㄷ다는 ㄱ것이다.
+```
+getCurrentVersionNumber((error, version) => {
+    console.log(version);
+});
+```
+-> version을 함수 외부에서  사용할 수 없다.
+
+Promise를 사용하면  
+```
+function getCurrentVersionNumber() {
+    return new Promise((resolve, reject) => {
+
+        // HTTP 요청
+
+        request.onload = function () {
+            if (request.status === 200) {
+                resolve(currentVersion);
+            } else {
+                reject(new Error("요청 실패"));
+            }
+        };
+    });
+}
+
+const promise = getCurrentVersionNumber();
+```
+getCurrentVersionNumber() 함수는 당장 버전을 반환할 수 없은니 Promise를 반환하고, 반환한 Promise를 외부에서 사용할 수 있다.
+```
+const promise = getCurrentVersionNumber();
+
+promise.then(version => {
+    console.log(version);
+});
+
+console.log("다음 코드");
+```
+
+반환된 promise를 사용해서 version 값을 사용할 수도 있다. **참고로, .then()은  현재 코드를 멈추고 기다리는 것이 아니다.** 이 차이가 동기적 프로그래밍과 promise를 사용한 비동기 프로그래밍의 차이이다. 위의 코드 블락을  실행하면 다음과 ㄱ ㅏㅌ은 순서이다.
+```
+getCurrentVersionNumber()
+        ↓
+HTTP 요청 시작
+        ↓
+Promise 반환
+        ↓
+then()에 콜백 등록
+        ↓
+"다음 코드" 실행
+        ↓
+       ...
+   서버 응답 도착
+        ↓
+then()의 콜백 실행
+```
+출력 값: 
+```
+다음 코드
+v.1.1.3
+```
+
+**Promise는 비동기 작업의 미래 결과를 나타내는 객체이고, async는 이 함수가 Promise를 반환하도록 만드는 키워드 이다. await은 그 Promise의 결과를 받는 지점이다.**
+
+async란 함수 앞에 붙이는 키워드로, 중요한 특징이 하나 있다.
+async 함수는 무조건 Promise를 반환하다.
+```
+function getData() { return "hello"; }
+const result = getData();
+console.log(result); // hello 출력
+```
+하지만 async가 붙으면, 
+```
+async function getData() { return "hello"; }
+const result = getData();
+console.log(result); // Promise { "hello" } 출력
+```
+처럼 Promise 객체를 반환한다.
+**하지만 async 자체가 비동기 작업을 만드는건 아니다.**
+코드 예시를 보면
+```
+async function hello() {
+    return "hello";
+}
+```
+여기에는 HTTP 요청도 없고 ㅅ ㅣ간이 걸리는 작업도 없다. 그런데도 Promise를 반환한다.
+즉, async의 직접적인 역할은 "이 함수의 반환값을 Promise로 감싸는 것" 이다.
+Promise로 감싸져 있는 반환 값에서 실제 데이터를 얻기 위해 등장한 키워드가 await 이다.
+
+여기서 조심해야 할 점: await은 정말 기다리는 것처럼 보인다. 마치 Promise를 반환하지만, Promise가 필요 없는 동기 함수인 것처럼 보이지만, 중요한 차이가 있다.
+
+await은 async 함수 내부에서 사용한다. 즉, 
+```
+function main() {
+    const version = await getVersion(); // ❌
+}
+```
+와 같이 사용할 수 없으며, main 함수의 function 키워드 앞에 async 키워드가 포함되어야 한다.
+await을 사용하기 위해, async가 필요하고, async 함수는 Promise를 반환한다.
+
+**await은 JavaScript 전체를 멈추는 것이 아니다.** await은 현재 실행중인 async 함수의 실행을 잠시 중단한다. await 키워드가 포함된 async 함수를 잠시 멈출 뿐, async 함수를 호출한 코드 외부 블락은 await을 기다리지 않고 실행된다.
+
+**async 함수는 Prmise 객체를 반환하는 함수이지, 이 함수가 비동기 작업을 수행함을 보장하는 키워드가 아니다.** 하지만 개발자는 코드를 분석할 때 promise 객체를 반환하는 코드가 있다면 암묵적으로 비동기 작업을 수행한다는 것을 예측할 수 있다. 
+
+프라미스 객체가 반환된 후에 프라미스를 반환하는 함수 내부의 동작이 이루어지므로 예외 발생 시 캐치할 수 있는 예외 처리가 필요하다. .then()에 전달하는 함수가 대안을 제시한다.
+프라미스 긱반 비동기 작업은 정상적으로 완료되면 then()의 첫 번째 인자인 함수에 결과를 전달하고, 예외가 발생하면 두 번째 인자인 함수에 전달한다.
+
+위와 같이 할 수도 있지만 다음과 같이 에러 처리 코드를 만드는 경우가 더 흔하다.
+`getJ S얘 ( ' /api/u se r/p rof ile'' ) ‘ then ( displayUse rP rof ile ) . catch ( hand leP rof ileE r ro r ) ;`
+
+
+13.2.5 병렬 프라미스 부터 계속
+
+
+
 
 
 
